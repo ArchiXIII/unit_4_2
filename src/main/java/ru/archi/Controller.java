@@ -88,10 +88,22 @@ public class Controller {
 
     private static void printAuthorWithBook(List<Book> books){
         System.out.println(books.stream()
-                .map(Book::getAuthors)
-                .flatMap(authors -> authors.stream().map(Author::getName))
-                .distinct()
+                .collect(Collectors.groupingBy(Book::getName, Collectors.mapping(book -> book.getAuthors(), Collectors.toList())))
 
-                .collect(Collectors.toList()) + "\n");
+//                .flatMap(book -> book.getAuthors().stream().map(Author::getName))
+//                .distinct()
+//                .peek(s -> s.concat("213123"))
+
+
+
+//                .map(Book::getAuthors)
+//                .flatMap(a -> a.stream().map(Author::getName))
+//                .collect(Collectors.groupingBy(a -> a.stream().map(Author::getName), books.stream().map(Book::getName)))
+
+//                .map(Book::getAuthors)
+//                .flatMap(authors -> authors.stream().map(Author::getName))
+//                .distinct()
+
+                /*.collect(Collectors.toList())*/ + "\n");
     }
 }
