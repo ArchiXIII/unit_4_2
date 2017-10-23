@@ -4,7 +4,6 @@ import main.java.ru.archi.model.Author;
 import main.java.ru.archi.model.Book;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
@@ -89,14 +88,9 @@ public class Controller {
 
     private static void printAuthorWithBook(List<Book> books){
         System.out.println(books.stream()
-                .map(Book::getAuthors)
-                .flatMap(Collection::stream)
-                .collect(Collectors.groupingBy(Author::getName, Collectors.counting()))
-
-//                .map(Book::getAuthors)
-//                .flatMap(a -> a.stream().map(Author::getName))
-//                .collect(Collectors.groupingBy(a -> a.stream().map(Author::getName), books.stream().map(Book::getName)))
-
-                /*.collect(Collectors.toList())*/ + "\n");
+                .collect(Collectors.groupingBy(
+                        book -> book.getAuthors().stream().map(Author::getName).collect(Collectors.toSet())
+                        , Collectors.groupingBy(Book::getName)))
+                + "\n");
     }
 }
