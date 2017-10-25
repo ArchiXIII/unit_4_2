@@ -1,8 +1,6 @@
 package main.java.ru.archi.model;
 
 
-import main.java.ru.archi.Gender;
-
 import java.time.LocalDate;
 
 /**
@@ -12,13 +10,13 @@ public class Author {
     private String name;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
-    private Gender gender;
+    private Sex sex;
 
-    public Author(String name, LocalDate dateOfBirth,LocalDate dateOfDeath, Gender gender) {
+    public Author(String name, LocalDate dateOfBirth,LocalDate dateOfDeath, Sex sex) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.dateOfDeath = dateOfDeath;
-        this.gender = gender;
+        this.sex = sex;
     }
 
     public Integer getAge(){
@@ -37,10 +35,6 @@ public class Author {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
     public LocalDate getDateOfDeath() {
         return dateOfDeath;
     }
@@ -49,12 +43,12 @@ public class Author {
         this.dateOfDeath = dateOfDeath;
     }
 
-    public Gender getGender() {
-        return gender;
+    public Sex getSex() {
+        return sex;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setSex(Sex sex) {
+        this.sex = sex;
     }
 
 

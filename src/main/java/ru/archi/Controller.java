@@ -2,8 +2,10 @@ package main.java.ru.archi;
 
 import main.java.ru.archi.model.Author;
 import main.java.ru.archi.model.Book;
+import main.java.ru.archi.model.Sex;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
@@ -30,67 +32,59 @@ public class Controller {
     }
 
     private static void printAverageAgeAuthors(List<Author> allAuthors){
-        double averageAge = allAuthors.stream()
-                .filter(a -> a.getDateOfDeath() == null)
+        System.out.println("    Average age authors:");
+        System.out.println("Average age = " + allAuthors.stream()
                 .mapToInt(Author::getAge)
                 .average()
-                .getAsDouble();
-
-        System.out.println("Average age = " + averageAge + "\n");
+                .getAsDouble() + "\n");
     }
 
     private static void printAscendingAuthors(List<Author> allAuthors){
-        List<Author> ascendingAuthors;
-
-        ascendingAuthors = allAuthors.stream()
-                .filter(a -> a.getDateOfDeath() == null)
-                .sorted((a1,a2) -> a1.getAge().compareTo(a2.getAge()))
-                .collect(Collectors.toList());
-
-        Author author;
-        for (int i = 0; i<ascendingAuthors.size(); i++) {
-            author = ascendingAuthors.get(i);
-            System.out.println(author.getName() + ": Age = " + author.getAge());
-        }
+        System.out.println("    Ascending authors:");
+        allAuthors.stream()
+                .sorted(Comparator.comparing(Author::getAge))
+                .map(author -> author.getName() + " - " + author.getAge())
+                .distinct()
+                .forEach(System.out::println);
         System.out.println();
     }
 
     private static void printAuthorsPensioners(List<Author> allAuthors){
-        List<Author> pensioners;
-
-        pensioners = allAuthors.stream()
-                .filter(a -> (a.getGender() == Gender.MALE && a.getAge() > 65)
-                        || (a.getGender() == Gender.FEMALE && a.getAge() > 63)
+        System.out.println("    Authors pensioners:");
+        allAuthors.stream()
+                .filter(a -> ((a.getSex() == Sex.MALE && a.getAge() > 65)
+                        || (a.getSex() == Sex.FEMALE && a.getAge() > 63))
                         && a.getDateOfDeath() == null)
-                .collect(Collectors.toList());
-
-        for (int i = 0; i<pensioners.size(); i++) {
-            System.out.println(pensioners.get(i).getName() + ": Age pensioner = " + pensioners.get(i).getAge());
-        }
-        System.out.println();
+                .map(author -> author.getName() + " - " + author.getAge())
+                .distinct()
+                .forEach(System.out::println);
     }
 
     private static void printBooksNameAngAge(List<Book> books){
-        System.out.println(books.stream()
+        System.out.println("    Books name ang age:");
+        books.stream()
                 .map(b -> b.getName() + " - "
                         + (LocalDate.now().getYear() - b.getYearOfIssue().getYear()) + " year")
-                .collect(Collectors.toList()) + "\n");
+                .collect(Collectors.toList())
+                .forEach(System.out::println);
     }
 
     private static void printCollaborators(List<Book> books){
-        System.out.println(books.stream()
+        System.out.println("    Collaborators:");
+        books.stream()
                 .filter(b -> b.getAuthors().size() > 1)
                 .map(Book::getAuthors)
                 .flatMap(authors -> authors.stream().map(Author::getName))
                 .distinct()
-                .collect(Collectors.toList()) + "\n");
+                .forEach(System.out::println);
     }
 
     private static void printAuthorWithBook(List<Book> books){
+        System.out.println("    AuthorWithBook:");
         System.out.println(books.stream()
-                .collect(Collectors.groupingBy(
-                        book -> book.getAuthors().stream().map(Author::getName).collect(Collectors.toSet())
-                        , Collectors.groupingBy(Book::getName)))
+                .collect(Collectors.groupingBy(Book::getName,
+                        Collectors.groupingBy(book -> book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()))
+                        ))
                 + "\n");
     }
 }
