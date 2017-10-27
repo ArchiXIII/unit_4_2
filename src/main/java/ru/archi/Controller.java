@@ -82,9 +82,10 @@ public class Controller {
     }
 
     private static void printAuthorWithBook(List<Book> books){
-        System.out.println("    AuthorWithBook:");
+        System.out.println("    AuthorWithBooks:");
         books.stream()
-                .flatMap(book -> book.getAuthors().stream().map(author -> new Pair<String, String>(author.getName(), book.getName())))
+                .flatMap(book -> book.getAuthors().stream()
+                        .map(author -> new Pair<String, String>(author.getName(), book.getName())))
                 .collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())))
                 .forEach((s, strings) -> System.out.println(s + " - " + strings));
     }
