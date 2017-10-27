@@ -1,12 +1,11 @@
 package main.java.ru.archi;
 
+import javafx.util.Pair;
 import main.java.ru.archi.model.Author;
 import main.java.ru.archi.model.Book;
 import main.java.ru.archi.model.Sex;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 
@@ -58,6 +57,7 @@ public class Controller {
                 .map(author -> author.getName() + " - " + author.getAge())
                 .distinct()
                 .forEach(System.out::println);
+        System.out.println();
     }
 
     private static void printBooksNameAngAge(List<Book> books){
@@ -67,6 +67,7 @@ public class Controller {
                         + (LocalDate.now().getYear() - b.getYearOfIssue().getYear()) + " year")
                 .collect(Collectors.toList())
                 .forEach(System.out::println);
+        System.out.println();
     }
 
     private static void printCollaborators(List<Book> books){
@@ -77,14 +78,14 @@ public class Controller {
                 .flatMap(authors -> authors.stream().map(Author::getName))
                 .distinct()
                 .forEach(System.out::println);
+        System.out.println();
     }
 
     private static void printAuthorWithBook(List<Book> books){
         System.out.println("    AuthorWithBook:");
-        System.out.println(books.stream()
-                .collect(Collectors.groupingBy(Book::getName,
-                        Collectors.groupingBy(book -> book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()))
-                        ))
-                + "\n");
+        books.stream()
+                .flatMap(book -> book.getAuthors().stream().map(author -> new Pair<String, String>(author.getName(), book.getName())))
+                .collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())))
+                .forEach((s, strings) -> System.out.println(s + " - " + strings));
     }
 }
